@@ -8,6 +8,18 @@ def upload_file(file_dir, target_file):
     s3_client = boto3.client('s3')
     s3_client.upload_file(file_dir, os.environ['s3_bucket'], f"{os.environ['s3_folder']}/{target_file}")
 
+def add_to_dynamo(version, url):
+    dynamo = boto3.resource('dynamodb')
+    table = dynamo.Table(os.environ['dynamo_table'])
+
+    table.put_item(
+        Item = {
+            "Id" : 1,
+            "Version": version,
+            "Url": url
+        }
+    )
+
 def handler(event, context):
 
     params = json.loads(event['body'])
@@ -37,19 +49,17 @@ def handler(event, context):
 
         file = open(file_dir, 'w')
         file.write(file_content)
+        file.close()
         upload_file(file_dir, file_name)
         
+        file_url = os.environ['url_base'] + file_name
+
+        add_to_dynamo(str(epoch), file_url)
+
         return {
             "statusCode": 200,
             "headers": {
                 "Content-Type": "application/json"
             },
-            "body": '{"content": "' + file_content + '"}'
+            "body": '{"result": "success"}'
         }
-    return {
-        "statusCode": 200,
-        "headers": {
-            "Content-Type": "application/json"
-        },
-        "body": event['body']
-    }
