@@ -26,4 +26,4 @@ jobs:
       - id: zip_code
         run: zip code.zip lambda.py
       - id: upload_zip
-        run: aws s3 cp code.zip ${{ env.CODE_LOCATION }}
+        run: aws s3 cp code.zip ${{ vars.CODE_LOCATION }}
