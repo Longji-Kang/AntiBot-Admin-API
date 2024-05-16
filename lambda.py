@@ -1,8 +1,7 @@
 def handler(event, context):
     return {
         "statusCode": 200,
-        "headers": {
-            "Content-Type": "application/json"
-        },
-        "body": "{\"result\": \"upload success\"}"
+        "body": {
+            "event": event
+        }
     }
