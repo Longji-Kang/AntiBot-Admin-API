@@ -29,5 +29,5 @@ jobs:
           ls
       - id: upload_zip
         run: |
-        aws sts get-caller-identity
-        aws s3 cp code.zip ${{ vars.CODE_LOCATION }}
+          aws sts get-caller-identity
+          aws s3 cp code.zip ${{ vars.CODE_LOCATION }}
