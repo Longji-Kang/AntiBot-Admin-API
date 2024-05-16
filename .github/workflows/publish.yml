@@ -28,6 +28,5 @@ jobs:
           zip code.zip lambda.py
           ls
       - id: upload_zip
-        uses: actions/aws/cli@master
-        with:
-          args: s3 cp code.zip ${{ vars.CODE_LOCATION }}
+        run: aws s3 cp code.zip ${{ vars.CODE_LOCATION }}
+        shell: bash {0}
