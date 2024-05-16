@@ -23,5 +23,10 @@ jobs:
         run: |
           zip code.zip lambda.py
       - id: upload_zip
+        run: aws s3 cp ./code.zip ${{ vars.CODE_LOCATION }}
+      - id: lambda_update
         run: |
-          aws s3 cp ./code.zip ${{ vars.CODE_LOCATION }}
+          aws lambda update-function-code \
+          --function-name ${{ vars.LAMBDA_NAME }} \
+          --s3-bucket ${{ vars.BUCKET }} \
+          --s3-key ${{ vars.S3_KEY }}
