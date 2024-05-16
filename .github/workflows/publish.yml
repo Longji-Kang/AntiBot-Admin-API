@@ -9,11 +9,11 @@ jobs:
   Lambda_Publish:
     runs-on: ubuntu-latest
     steps:
-      - id: aws_cli_setup
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
+      # - id: aws_cli_setup
+      #   run: |
+      #     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      #     unzip awscliv2.zip
+      #     sudo ./aws/install
       - id: zip_setup
         run: sudo apt-get install zip
       - id: env_setup
