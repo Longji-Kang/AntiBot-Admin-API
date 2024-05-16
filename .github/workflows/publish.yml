@@ -1,0 +1,29 @@
+name: Lambda Publish
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Lambda_Publish:
+    runs-on: ubuntu-latest
+    steps:
+      - id: aws_cli_setup
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+      - id: zip_setup
+        run: sudo apt-get install zip
+      - id: env_setup
+        run: |
+          export AWS_ACCESS_KEY_ID=${{ secrets.ACCESS_KEY }}
+          export AWS_SECRET_ACCESS_KEY=${{ secrets.SECRET_ACCESS_KEY }}
+          export AWS_DEFAULT_REGION=eu-west-1
+      - id: checkout
+        uses: actions/checkout@v4
+      - id: zip_code
+        run: zip code.zip lambda.py
+      - id: upload_zip
+        run: aws s3 cp code.zip ${{ env.CODE_LOCATION }}
