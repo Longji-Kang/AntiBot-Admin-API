@@ -29,7 +29,8 @@ def handler(event, context):
             return {
                 "statusCode": 200,
                 "headers": {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
                 },
                 "body": '{"result": "approved"}'
             }
@@ -37,7 +38,8 @@ def handler(event, context):
             return {
                 "statusCode": 401,
                 "headers": {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
                 },
                 "body": '{"result": "invalid"}'
             }
@@ -59,7 +61,8 @@ def handler(event, context):
         return {
             "statusCode": 200,
             "headers": {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*"
             },
             "body": '{"result": "success"}'
         }
