@@ -3,6 +3,7 @@ import os
 import base64
 import boto3
 import time
+from zipfile import ZipFile
 
 def upload_file(file_dir, target_file):
     s3_client = boto3.client('s3')
@@ -19,6 +20,12 @@ def add_to_dynamo(version, url):
             "Url": url
         }
     )
+
+def sanitizeFile(file: str):
+    content_64 = file.split(',')[1]
+    content = base64.b64decode(content_64)    
+
+    return content
 
 def handler(event, context):
 
@@ -44,15 +51,24 @@ def handler(event, context):
                 "body": '{"result": "invalid"}'
             }
     elif params['action'] == 'upload': 
+        # ZIP File
         file_content = str(base64.b64decode(params['content']), encoding='ascii')
+        file_content_sanitized = sanitizeFile(file_content)
+        file_dir     = f"/mnt/lambda/"
+
+        temp_file = "temp.zip"
+
+        zip_file = open(f'{file_dir}/{temp_file}', "wb")
+        zip_file.write(file_content_sanitized)
+        zip_file.close()
+
+        with ZipFile(f'{file_dir}/{temp_file}') as zip:
+            zip.extractall(f'{file_dir}/')
+
         epoch        = int(time.time())
         file_name    = f'{epoch}-definition.pkl'
-        file_dir     = f"/mnt/lambda/{file_name}"
 
-        file = open(file_dir, 'w')
-        file.write(file_content)
-        file.close()
-        upload_file(file_dir, file_name)
+        upload_file(f'{file_dir}/model.pkl', file_name)
         
         file_url = os.environ['url_base'] + file_name
 
